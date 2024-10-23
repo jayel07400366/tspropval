@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capitalization Approach Calculator</title>
+   <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            color: #ecf0f1;
+            margin: 0;
+            padding: 0;
+            overflow-y: scroll; /* Added vertical scroll */
+            position: relative; /* Added to set positioning context for video background */
+        }
+
+        .video-background {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .calculator-container {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .calculator {
+            padding: 20px;
+            border: 1px solid #bdc3c7;
+            width: 320px;
+            background: rgba(255, 255, 255, 0.8); /* Transparent background */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            color: #2c3e50;
+            border-radius: 10px;
+            margin: 10px;
+        }
+
+        h1 {
+            color: #3498db;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold; /* Make labels bold */
+        }
+
+        input[type="number"] {
+            width: calc(100% - 16px);
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #3498db;
+            border-radius: 4px;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #2980b9;
+        }
+
+        input[disabled] {
+            background-color: #bdc3c7;
+        }
+
+        .steps {
+            text-align: left;
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 20px;
+        }
+
+        .toggle-list {
+            cursor: pointer;
+            color: #3498db;
+            margin-top: 20px;
+            text-decoration: underline;
+        }
+
+        .toggle-list:hover {
+            color: #2980b9;
+        }
+
+        .list-hidden {
+            display: none;
+        }
+
+        .list-shown {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-background">
+        <video autoplay muted loop>
+            <source src="caprate.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="calculator-container">
+        <div class="calculator">
+            <h1>Capitalization Rate Calculator</h1>
+            <form>
+                <label for="comparableRentalPerWeek">Comparable Rental per Week (K):</label>
+                <input type="number" id="comparableRentalPerWeek" placeholder="Enter comparable rental per week" required>
+                <br>
+                <label for="annualIncome">Annual Income (K):</label>
+                <input type="number" id="annualIncome" placeholder="Calculated automatically" disabled>
+                <br>
+                <label for="sellingPrice">Selling Price (K):</label>
+                <input type="number" id="sellingPrice" placeholder="Enter selling price" required>
+                <br>
+                <label for="capRate">Capitalization Rate:</label>
+                <input type="number" id="capRate" placeholder="Calculated automatically" disabled>
+                <br>
+                <div class="toggle-list" onclick="toggleList('capRateList')">Check Real Estate Listings</div>
+                <div id="capRateList" class="list-hidden">
+                    <ul>
+                        <li><a href="https://www.hausples.com.pg/" target="_blank">Hausples</a></li>
+                        <li><a href="https://www.raywhitepng.com/" target="_blank">Ray White</a></li>
+                        <li><a href="https://theprofessionals.com.pg/en" target="_blank">The Professionals</a></li>
+                        <li><a href="https://www.ljhookerpng.com/" target="_blank">LJ Hooker</a></li>
+                        <li><a href="https://kenmok.com.pg/" target="_blank">Ken Mok & Associates</a></li>
+                        <li><a href="https://www.sre.com.pg/en" target="_blank">Strickland Real Estate</a></li>
+                        <li><a href="https://www.budgetre.com.pg/en" target="_blank">Budget Real Estate</a></li>
+                        <li><a href="https://www.century21global.com/en/" target="_blank">Century 21</a></li>
+                        <li><a href="https://www.mypnghome.com/" target="_blank">PNG Home</a></li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="calculator">
+            <h1>Capital Value Calculator</h1>
+            <form>
+                <label for="subjectsRentalPerWeek">Subjects Rental per Week (K):</label>
+                <input type="number" id="subjectsRentalPerWeek" placeholder="Enter subjects rental per week" required>
+                <br>
+                <label for="annualOutgoings">Annual Outgoings (K):</label>
+                <input type="number" id="annualOutgoings" placeholder="Enter annual outgoings" required>
+                <br>
+                <label for="grossAnnualIncome">Gross Annual Income (K):</label>
+                <input type="number" id="grossAnnualIncome" placeholder="Calculated automatically" disabled>
+                <br>
+                <label for="netAnnualIncome">Net Annual Income (K):</label>
+                <input type="number" id="netAnnualIncome" placeholder="Calculated automatically" disabled>
+                <br>
+                <label for="marketValue">Market Value (K):</label>
+                <input type="number" id="marketValue" placeholder="Calculated automatically" disabled>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleList(id) {
+            var list = document.getElementById(id);
+            if (list.classList.contains('list-hidden')) {
+                list.classList.remove('list-hidden');
+                list.classList.add('list-shown');
+            } else {
+                list.classList.remove('list-shown');
+                list.classList.add('list-hidden');
+            }
+        }
+
+        // Capitalization Rate Calculator
+        const comparableRentalPerWeekInput = document.getElementById('comparableRentalPerWeek');
+        const annualIncomeInput = document.getElementById('annualIncome');
+        const sellingPriceInput = document.getElementById('sellingPrice');
+        const capRateInput = document.getElementById('capRate');
+
+        function updateCapRate() {
+            const comparableRentalPerWeek = parseFloat(comparableRentalPerWeekInput.value);
+
+            if (!isNaN(comparableRentalPerWeek)) {
+                // Calculate Annual Income (comparable rental per week * 52)
+                const annualIncome = (comparableRentalPerWeek * 52).toFixed(2);
+                annualIncomeInput.value = annualIncome;
+                
+                // Calculate Capitalization Rate (annualIncome / sellingPrice * 100)
+                const sellingPrice = parseFloat(sellingPriceInput.value);
+                if (!isNaN(sellingPrice) && sellingPrice !== 0) {
+                    const capRate = (annualIncome / sellingPrice) * 100;
+                    capRateInput.value = capRate.toFixed(2);
+                } else {
+                    capRateInput.value = 'Invalid input';
+                }
+            } else {
+                annualIncomeInput.value = 'Invalid input';
+                capRateInput.value = 'Invalid input';
+            }
+        }
+
+        comparableRentalPerWeekInput.addEventListener('input', updateCapRate);
+        sellingPriceInput.addEventListener('input', updateCapRate);
+
+        // Market Value Calculator
+        const subjectsRentalPerWeekInput = document.getElementById('subjectsRentalPerWeek');
+        const annualOutgoingsInput = document.getElementById('annualOutgoings');
+        const grossAnnualIncomeInput = document.getElementById('grossAnnualIncome');
+        const netAnnualIncomeInput = document.getElementById('netAnnualIncome');
+        const marketValueInput = document.getElementById('marketValue');
+        const capRateInputForMarketValue = document.getElementById('capRate'); // Added this line
+
+        function updateMarketValue() {
+            const subjectsRentalPerWeek = parseFloat(subjectsRentalPerWeekInput.value);
+            const annualOutgoings = parseFloat(annualOutgoingsInput.value);
+
+            if (!isNaN(subjectsRentalPerWeek) && !isNaN(annualOutgoings)) {
+                // Calculate Gross Annual Income (subjects rental per week * 52)
+                const grossAnnualIncome = (subjectsRentalPerWeek * 52).toFixed(2);
+                
+                // Calculate Net Annual Income (Gross Annual Income - Annual Outgoings)
+                const netAnnualIncome = (grossAnnualIncome - annualOutgoings).toFixed(2);
+
+                // Update the calculated fields
+                grossAnnualIncomeInput.value = grossAnnualIncome;
+                netAnnualIncomeInput.value = netAnnualIncome;
+
+                // Calculate Market Value (Net Annual Income * Capitalization Rate)
+                const capRate = parseFloat(capRateInputForMarketValue.value); // Use capRateInputForMarketValue here
+                if (!isNaN(capRate) && capRate !== 0) {
+                    const marketValue = (netAnnualIncome * capRate).toFixed(2);
+                    marketValueInput.value = marketValue;
+                } else {
+                    marketValueInput.value = 'Invalid cap rate';
+                }
+            } else {
+                grossAnnualIncomeInput.value = 'Invalid input';
+                netAnnualIncomeInput.value = 'Invalid input';
+                marketValueInput.value = 'Invalid input';
+            }
+        }
+
+        subjectsRentalPerWeekInput.addEventListener('input', updateMarketValue);
+        annualOutgoingsInput.addEventListener('input', updateMarketValue);
+    </script>
+</body>
+</html>
